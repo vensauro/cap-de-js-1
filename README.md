@@ -170,3 +170,124 @@
     No javascript as funções são de "alta ordem", ou melhor Higher-Ordem, isso significa
     que elas são valores e podem receber outras funções como parametros, ou retornarem funções,
     uma função pode se comportar como os outros valores da linguagem
+
+    Em relação a função ser um valor é por ela ser atribuida a uma variavel i.e:
+
+    ```javascript
+    let launchMissiles = function() {
+        missileSystem.launch("now");
+    };
+    if (safeMode) {
+        launchMissiles = function() {/* do nothing */};
+    }
+    ```
+
+    Assim por que não colocar ela como parametro de outra função?
+
+    ```javascript
+    function repeat(n, action) {
+        for (let i = 0; i < n; i++) {
+            action(i);
+        }
+    }
+
+    let labels = [];
+
+    repeat(5, i => {
+        labels.push(`Unit ${i + 1}`);
+    });
+
+    console.log(labels);
+    // → ["Unit 1", "Unit 2", "Unit 3", "Unit 4", "Unit 5"]
+    ```
+
+    Então eu posso criar uma função dentro de outra função? Sim
+    E tambem pode retorna uma função dentro de outra, e fazer o famoso curryng
+    que é nada mais que dividir os parametros de uma função entre varias
+
+    ```javascript
+    function maiorQueNormal(x, y) {
+        return x > y
+    }
+
+    function maiorQueCurryng(x) {
+        return y => x > y
+    }
+
+    const maiorQue10 = MaiorQueCurryng(10)
+    console.log(maiorQue10(2)) // → false
+    console.log(maiorQue10(11)) // → true
+    ```
+
+    O livro javascript Eloquent tem dois capitulos para falar sobre funções, caso tenha
+    curiosidades recomendo a leitura
+
+    e terminando sobre desestruturação, ela pode ser feita em qualquer lugar
+    onde se recebe algum valor, incluindo nos parametros da função
+
+    ```javascript
+    function algumaCoisa({ portas, rodas}, [primeiroElemento, segundoElemento]) {
+        // faça algo incrivel aqui
+    }
+
+    const users = [
+        { user: "Name1",geo:{lat:'12',long:'13'} },
+        { user: "Name2",geo:{lat:'12',long:'13'}, age: 2 },
+        { user: "Name2",geo:{lat:'12',long:'13'} },
+        { user: "Name3",geo:{lat:'12',long:'13'}, age: 4 }
+    ];
+
+    for (const { user, age = "DEFAULT AGE" } of users) {
+        console.log(user, age);
+    }
+    ```
+
+7. Os 3 pontinhos ...
+
+    Esses 3 pontinhos podem significar duas coisas, que são o Rest e o Spread
+
+    O rest é uma forma de receber diversos argumentos numa função(ou numa desestruturação)
+
+    ```javascript
+    function somar(...parametros) {
+        console.log(parametros typeof [])
+        // resto do code
+    }
+
+    const [person1, person2, ...vetorComRestoDasPessoas] = vetorAleatorio
+
+    const { nome, ...objetoComORestoDasPropriedades } = peson1
+    console.log(nome) // → Caneta Azul
+    ```
+
+    Já o spread, é uma forma mais bonitinha de escrever duas funções, que são o 
+    array.concat e o Object.assign, o que essas funções fazem é juntar os elementos
+
+    ```javascript
+    let arr = [3, 5, 1];
+    let arr2 = [8, 9, 15];
+
+    let merged = [0, ...arr, 2, ...arr2];
+    // merged = [].concat([0]).concat(arr).concat([2]).concat(arr2)
+
+    alert(merged); // 0,3,5,1,2,8,9,15 (0, then arr, then 2, then arr2)
+
+    let str = "Hello";
+
+    alert( [...str] ); // H,e,l,l,o
+    ```
+
+    E com objetos como mostra abaixo: 
+
+    ```javascript
+    let dados1 = { cidade: "Sao Paulo", aonde: "capital" }
+    let dados2 = { população: "Enorme", he: "ha" }
+
+    let dados juntos = {...dados1, ...dados2, he: "ho"}
+    // Object.assign({}, dados1, dados2, { he: "ho" })
+    ```
+
+    neste exemplo mostra a utilização do campo `he` duas vezes, assim o valor do ultimo prevalece
+    no caso `"ho"`
+
+8. Assincronicidade
