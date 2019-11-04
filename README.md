@@ -270,11 +270,11 @@
     let merged = [0, ...arr, 2, ...arr2];
     // merged = [].concat([0]).concat(arr).concat([2]).concat(arr2)
 
-    alert(merged); // 0,3,5,1,2,8,9,15 (0, then arr, then 2, then arr2)
+    alert(merged); // → 0,3,5,1,2,8,9,15 (0, then arr, then 2, then arr2)
 
     let str = "Hello";
 
-    alert( [...str] ); // H,e,l,l,o
+    alert( [...str] ); // → H,e,l,l,o
     ```
 
     E com objetos como mostra abaixo: 
@@ -291,3 +291,194 @@
     no caso `"ho"`
 
 8. Assincronicidade
+
+    Algo bastante comentado sobre o javascript é a assincronicidade, saiba que ela não tem nada de
+    especial, o javascript não introduziu nenhum conceito novo, apenas trabalha a nivel de linguagem
+    sendo async, e tendo formas de trabalhar com isso, desde estruturas de dados avançadas até 
+    palavras chaves para tratar isso.
+
+    Explicando o problema de se trabalhar com atividades assincronas, é que você não sabe quando
+    algo será feito, e não pode fazer o programa esperar até isso ser feito se não ele ficara travado
+    principalmente no browser, imagina que ruim seria se a pagina do usuario estivesse travada, porque
+    o javascript está esperando o servidor responder com os dados
+
+    No javascript existe 3 patterns de se trabalhar com atividades assincronas, que são:
+    Callback, Promises e Async await
+
+    - Callback
+        ```javascript
+        const dadosEscondidos = [
+            { user: "Name1",geo:{lat:'12',long:'13'} },
+            { user: "Name2",geo:{lat:'12',long:'13'}, age: 2 },
+            { user: "Name2",geo:{lat:'12',long:'13'} },
+            { user: "Name3",geo:{lat:'12',long:'13'}, age: 4 }
+        ];
+
+        function buscarDados() {
+            setTimeout(() => {
+                return dadosEscondidos
+            }, 5000)
+        }
+
+        const usuarios = buscarDados()
+        console.log(usuarios[0]) 
+        //  console.log(usuarios[0])
+        //                       ^
+
+        //  TypeError: Cannot read property '0' of undefined
+        ```
+
+        > Este codigo esta no arquivo3.js, execute no terminal com o comando: node arquivo3.js
+
+        Deu erro nesse exemplo pois o javascript não espera uma atividade terminar para continuar
+        o codigo, logo ele executou o console.log antes da função `buscarDados` terminar.
+        Uma solução para isso é usar callback, que é apenas o fato de colocar uma função
+        como parametro da função `buscarDados`, e assim a função `buscarDados` executa esta 
+        função de parametro quando os dados estiverem prontos:
+
+        ```javascript
+        function buscarDados(callback) {
+            setTimeout(() => {
+                callback(dadosEscondidos)
+            }, 5000)
+        }
+
+        buscarDados(usuarios => {
+            console.log(usuarios[0]) 
+        })
+        ```
+
+        > Este codigo esta no arquivo4.js, execute no terminal com o comando: node arquivo4.js
+
+        Está solução prevaleceu por bastante tempo, porém ela é simples e dificil de manter 
+        a manuntenção do codigo quando o mesmo cresce, por você ser obrigado a codificar dentro
+        da callback, mas se você necessitar de outra atividade assincrona, utilizar outra callback 
+        dentro desta callback, e depois pode precisar de outra callback, e chega num momento que é
+        conhecido como callback hell (onde é dificil de pensar e entender sobre o codigo)
+
+        ![Callback hell](assets/callback_hell.jpeg)
+
+        [callbackhell.com](http://callbackhell.com/)
+
+    - Promises
+
+        A solução para melhorar a forma de se trabalhar com as atividades assincronas foi as
+        promisses, que é um pattern de uma estrutura de dados que ajuda a retirar o callback hell
+        além de trazer outras soluções, hoje em dia o javascript tem um objeto Promises para 
+        trabalhar com isso, mas saiba que não é algo novo, as Promises tambem conhecida como futures
+        em outras linguagens é uma solução antiga para o mesmo problema, sendo conhecida desde 
+        1990 e pouco, e você mesmo pode implementar a sua (claro que a nativa da linguagem tem
+        melhorias de peformance conectado com o motor do javascript).
+
+        ```javascript
+        // a função buscarDados retorna uma promise
+        function buscarDados() {
+            // O construtor de Promise recebe uma função como parametro iremos chamar de função [[A]]
+            // essa função tem duas funções como parametro, que são [[resolve]] e [[reject]]
+            // você faz o codigo da atividade assincrona dentro da função [[A]], o resultado da
+            // atividade assincrona você executa a função [[resolve]] e passa o resultado ta atividade
+            // assincrona para essa função
+            // caso tenha dado algum erro, execute a função [[reject]] e passe o erro para ela
+            return new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    resolve(dadosEscondidos)
+                }, 5000)
+        
+                // se tivesse dado erro
+                // reject(erro aqui)
+            })
+        } 
+
+        buscarDados()
+            .then(resultado => resultado[0])
+            .then(resultado => console.log(resultado))
+            .catch(erro => console.error(erro))
+        ```
+
+        > Este codigo esta no arquivo5.js, execute no terminal com o comando: node arquivo5.js
+
+        Perceba que aqui passamos a antiga callback para a função `then`, porém a diferença de como
+        se fazia antes, é que o resultado retornado por essa função pode é passado para o parametro do
+        proximo `then`, veja que no codigo retornei no primeiro `then` o primeiro elemento do vetor,
+        e assim utilizo ele no proximo `then`.
+        Outra feature interessante é o tratamento de erro, enquanto antes era necessario tratar o
+        erro dentro de cada callback, aqui podemos the um `catch`, de uma vez só, casso ocorra
+        um erro dentro de qualquer `then`, o `catch` é executado
+
+    - Async await
+
+        Já estava tudo perfeito? mas tem como melhorar :sunglasses:
+        o async await é uma abstração da linguagem feita em cima das Promises, para fazer os codigos
+        com promises serem programados igual codigos sincronos, sendo uma feature copiada do C#.
+        A Microsoft é dona do C# e do typescript, e o javascript tem forte influencia das features do
+        typescript (i love typescript :heart:)
+
+        Mas como isso funciona????
+        Eggxamples: 
+
+        ```javascript
+
+        // aqui estamos usando a versao de promise da função buscarDados
+
+        async function main() {
+            try {
+                const resultado = await buscarDados()
+                const pessoa = resultado[0]
+                console.log(pessoa)
+            } catch(erro) {
+                console.error(erro)
+            }
+        }
+        main()
+        ```
+
+        > Este codigo esta no arquivo6.js, execute no terminal com o comando: node arquivo6.js
+
+        O que ocorre aqui é um syntax sugar, é como se com o await, ele coloca-se tudo que tem nas 
+        linhas de baixo dentro de um `then`, e o codigo fica parecido com codigo sincrono.
+        Veja que o erro foi trado no catch lá embaixo do try catch
+        A palavra chave await só pode ser executada dentro de funções async, e funções async são 
+        automaticamento tranformadas em Promise, ou seja poderiamos fazer isso:
+
+        ```javascript
+        async function main() {
+            const resultado = await buscarDados()
+            const pessoa = resultado[0]
+            console.log(pessoa)
+            
+        }
+        main()
+            .catch(console.error)
+        ```
+
+        Curiosidade: para o ano de 2020 será lançada a feature top level await, que é o fato de poder
+        utilizar await sem estar dentro de uma função async mais aqui: [top level await](https://v8.dev/features/top-level-await)
+
+    Caso tenha curiosidades e deseja saber mais, além dos conteudos que passei lá no começo que tem
+    capitulos exclusivos para esse assunto, tambem tem uns artigos otimos do Lucas Santos que trabalha
+    bastante bem em cima disso [Entendendo promises de uma vez por todas](https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=1&cad=rja&uact=8&ved=2ahUKEwjkkbLn7s_lAhVvGbkGHZPCBAYQFjAAegQIABAB&url=https%3A%2F%2Fmedium.com%2Ftrainingcenter%2Fentendendo-promises-de-uma-vez-por-todas-32442ec725c2&usg=AOvVaw3yTbca_pvAO_wqFrrCz-JQ)
+
+9. Utilizando a fetch API
+
+    agora que você ta ficando avançado, irei mostrar como utilizar a fetch API, que é uma função
+    dos navegadores para fazer requisições pela internet e que utiliza promises, é bem mais facil e 
+    melhor de trabalhar do que a forma antiga utilizando o xhtmlrequest com ready state (sendo que essa
+    função é uma abstração sobre isso)
+
+    vamos buscar um dado da internet
+
+    ```javascript
+    const url = "https://www.jsonstore.io/6b54c9fcbf378230422f33138acff270ee510bd02cdf2d046b65305d7197a3b7"
+
+    async function main() {
+        const rawResult = await fetch(url)
+        const resultado = await rawResult.json()
+        console.log(resultado)
+    }
+    main()
+    ```
+
+    > Este codigo esta no arquivo7.js, execute no terminal com o comando: node arquivo7.js
+    > para executar ele será necessario instalar as dependencias com yarn ou npm
+
+    obrigado, :octocat: :squirrel:

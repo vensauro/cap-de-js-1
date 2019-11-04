@@ -1,0 +1,11 @@
+{
+  "name": "cap-de-js-1",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:vensauro/cap-de-js-1.git",
+  "author": "Ivens <ivensjorisnbacon@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "isomorphic-fetch": "^2.2.1"
+  }
+}
