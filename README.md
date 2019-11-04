@@ -5,6 +5,17 @@
     Ela é utilizada nas tecnologias web por ser exotica
     da para fazer muita coisa ruim.
 
+    Se deseja aprender javascript pra valer, tem alguns livros/sites que recomendo:
+    [Javascript Eloquent](https://eloquentjavascript.net/)
+    [javascript.info](https://javascript.info/)
+    [you dont know js](https://github.com/cezaraugusto/You-Dont-Know-JS)
+    [aprenda rapido com flavio copes](https://drive.google.com/drive/folders/1j2m1RLY-ZHRTiUatCpBZGDc8t1ff74_x)
+    [apenas um livro do flavio porem no medium](https://medium.freecodecamp.org/es5-to-esnext-heres-every-feature-added-to-javascript-since-2015-d0c255e13c6e)
+    [js the right way](http://jstherightway.org/pt-br/)
+
+    isso não tem nenhuma ordem, é seu dever avaliar se serve para você e qual o melhor,
+    se você prefere lê ou aprende vendo os outros
+
 2. O que é o ES5 ou ES6 ou ES7 ou ES2019 ou ES2020
     No começo do javascript ele foi criado para coisas simples, não pensaram que seria usado para tudo
     como é hoje em dia, como  foi uma coisa interessante outras empresas copiaram, o netscape tinha a invenção,
@@ -100,7 +111,7 @@
     ```javascript
     const existe_algo = pessoa1 || pessoa2
     ```
-    
+
     se `pessoa1` for um valor com nada dentro o valor de `existe_algo` será pessoa2
     caso contrario será `pessoa1`
 
@@ -110,3 +121,52 @@
 
 
 5. Desestruturação
+
+    Algo que serve mais como perfumaria, mas é bastante interessante(e bonito) é a desestruturação.
+    Ela serve para fazer ligações rapidas(ligações são as famosas variaveis)
+
+    ```javascript
+    const [ primeiro, segundo ] = vetor
+    ```
+
+    isso é a mesma coisa disso:
+
+    ```javascript
+    const primeiro = vetor[0]
+    const segundo = vetor[1]
+    ```
+
+    da até para trocar variaveis que nem no python
+
+    ```javascript
+    let a = 5
+    let b = 90
+
+    [b, a] = [a, b]
+    ```
+
+    O que ocorre acima, é que foi criado um vetor com dois valores, e com a desestruturação
+    os valores foram logo reatribuidos
+
+    tambem pode fazer desestruturação com objetos
+
+    ```javascript
+    const { nome, idade } = pessoa
+    ```
+
+    A diferença é que obrigatoriamente é necessario utilizar o nome da propriedade
+    dentro do objeto, enquanto com o vetor voce atribui o nome que desejar
+
+    Caso deseje utilizar um nome diferente pode fazer um named desestructuring
+
+    ```javascript
+    const { nome, idade: anos } = pessoa
+    ```
+
+    mais informações em: [destructuring assignment](https://javascript.info/destructuring-assignment)
+
+6. Funçoes
+
+    No javascript as funções são de "alta ordem", ou melhor Higher-Ordem, isso significa
+    que elas são valores e podem receber outras funções como parametros, ou retornarem funções,
+    uma função pode se comportar como os outros valores da linguagem
