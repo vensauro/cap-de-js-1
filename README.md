@@ -481,4 +481,8 @@
     > Este codigo esta no arquivo7.js, execute no terminal com o comando: node arquivo7.js
     > para executar ele será necessario instalar as dependencias com yarn ou npm
 
+    Com isso você terá o necessario para entender e utilizar boa parte dos codigos modernos do javascript,
+    mas ainda tem outras coisas interessantes para se vê como string literals, tentei ser sucinto e trazer
+    apenas o necessario, sei que o objetivo de quem lê é entender um pouco e aprender, e não virar ninja
+
     obrigado, :octocat: :squirrel:
